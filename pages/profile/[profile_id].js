@@ -12,13 +12,13 @@ const ProfilePage = ({ convertedImages }) => {
   const [croppedSrc, setCroppedSrc] = useState(null);
   const [crop, setCrop] = useState({ unit: "%", width: 50, aspect: 1 });
   const [showImages, setShowImages] = useState(false);
-
+  const [src, setSrc] = useState(null);
   const handleCaptionChange = (e) => {
     const text = e.target.value;
     setCaption(text);
   };
 
-  console.log(convertedImages)
+  // console.log(convertedImages)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +35,17 @@ const ProfilePage = ({ convertedImages }) => {
         },
       }
     );
+    setTimeout(()=>{
+      alert(res.data.message)
+    },2000)
     setShowModal(false);
+    setSrc(null);
+    setCaption("");
+    setCroppedSrc(null);
+    setCrop({ unit: "%", width: 50, aspect: 1 });
+
+    // console.log(res);
+
   };
   const handleImage = () => {
     setShowImages(() => {
@@ -59,15 +69,17 @@ const ProfilePage = ({ convertedImages }) => {
   console.log(showImages);
   return (
     <div className="container w-full">
-      <h1> Profile ID: {profile_id} </h1>{" "}
+      <p className="text-2xl text-center"> Profile ID: {profile_id} </p>{" "}
+      <div className="flex justify-center border  w-full">
       <button
-        className="mt-5 inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]  hover:bg-neutral-800 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
+        className="my-5 w-52 rounded border bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]  hover:bg-neutral-800 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-neutral-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] dark:bg-neutral-900 dark:shadow-[0_4px_9px_-4px_#030202] dark:hover:bg-neutral-900 dark:hover:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:focus:bg-neutral-900 dark:focus:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)] dark:active:bg-neutral-900 dark:active:shadow-[0_8px_9px_-4px_rgba(3,2,2,0.3),0_4px_18px_0_rgba(3,2,2,0.2)]"
         type="button"
         onClick={handleImage}
       >
         Show Posts
       </button>
-      <div className="flex justify-around">
+      </div>
+      <div className="flex justify-around my-4">
         {showModal ? (
           <>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -141,6 +153,8 @@ const ProfilePage = ({ convertedImages }) => {
         setCroppedSrc={setCroppedSrc}
         setShowModal={setShowModal}
         crop={crop}
+        src={src}
+        setSrc={setSrc}
         setCrop={setCrop}
       />
     </div>
@@ -153,7 +167,7 @@ export async function getServerSideProps(context) {
     `http://localhost:3000/api/getImage?username=${profile_id}`
   );
   const images = res.data.images[0];
-  const captions = res.data.images
+  const captions = res.data
   console.log(captions)
   const convertedImages = images
     ? images.map((image) => {
@@ -164,8 +178,8 @@ export async function getServerSideProps(context) {
       })
     : "images";
   return {
-    props: { convertedImages, }, // will be passed to the page component as props
-    revalidate :60
+    props: { convertedImages,captions ,  revalidate :60}, // will be passed to the page component as props
+  
   };
 }
 

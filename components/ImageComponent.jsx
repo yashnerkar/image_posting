@@ -3,15 +3,13 @@ import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 const ImageComponent = ({
-  crop,setCroppedSrc,setCrop,croppedSrc,setShowModal
+  crop,setCroppedSrc,setCrop,croppedSrc,setShowModal,src,setSrc
 }) => {
-  const [src, setSrc] = useState(null);
+  
   const imageRef = useRef(null);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
     const reader = new FileReader();
-    // console.log(reader);
     reader.onload = () => {
       setSrc(reader.result);
     };
@@ -22,9 +20,7 @@ const ImageComponent = ({
     if (imageRef.current && crop.width && crop.height) {
       const croppedImageUrl = getCroppedImgUrl(imageRef.current, crop);
       console.log("Cropped Image URL:", croppedImageUrl);
-      const base64String = croppedImageUrl.split(',')[1]; // Remove the data:image/jpeg;base64, part
-    const imageBufferData = Buffer.from(base64String, 'base64');
-      setCroppedSrc(imageBufferData);
+      setCroppedSrc(croppedImageUrl);
     }
   };
 
