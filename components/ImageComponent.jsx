@@ -7,13 +7,11 @@ const ImageComponent = ({
 }) => {
   const [src, setSrc] = useState(null);
   const imageRef = useRef(null);
-  // console.log(imageRef.current);
-  // console.log(src);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log(file);
     const reader = new FileReader();
-    console.log(reader);
+    // console.log(reader);
     reader.onload = () => {
       setSrc(reader.result);
     };

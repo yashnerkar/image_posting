@@ -18,8 +18,7 @@ const handler = async (req, res) => {
       return;
     }
     const {username,caption,imageFile} = fields;
-    console.log(fields)
-    // const fileName =  uuidv4();
+    const fileName =  uuidv4();
     const base64String = imageFile.split(',')[1]; // Remove the data:image/jpeg;base64, part
     const mimetype = imageFile.split(';')[0].slice(5) //images/data
     const imageBufferData = Buffer.from(base64String, 'base64');
@@ -41,7 +40,7 @@ const handler = async (req, res) => {
         }
       })
       await user.updateOne({_id:user._id},{$push:{images:imageDataObj}});
-      console.log(user)
+      // console.log(user)
       return res.status(200).json({
         message : "Image updated successfully"
       })

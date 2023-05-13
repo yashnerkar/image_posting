@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 async function connectDB() {
   try {
-    await mongoose.connect('mongodb+srv://yash:root123@cluster0.bnve2yi.mongodb.net/', {
+    await mongoose.connect(process.env.MONGOURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
