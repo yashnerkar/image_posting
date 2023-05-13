@@ -46,9 +46,10 @@ const ProfilePage = ({ convertedImages }) => {
   const ConvertedImageComponent = ({ images }) => {
     return (
       <>
-        {images?.map((path, index) => (
-          <div className="container flex" key={index + 1}>
-            <Image src={path} height={200} width={200} alt="base64encoded" />
+        {images?.map((image, index) => (
+          <div className="container" key={index + 1}>
+            <Image src={image} height={200} width={200} alt="base64encoded" />
+            <p>{}</p>
           </div>
         ))}
       </>
@@ -152,6 +153,8 @@ export async function getServerSideProps(context) {
     `http://localhost:3000/api/getImage?username=${profile_id}`
   );
   const images = res.data.images[0];
+  const captions = res.data.images
+  console.log(captions)
   const convertedImages = images
     ? images.map((image) => {
         const base64Data = Buffer.from(image.data).toString("base64");
@@ -161,7 +164,8 @@ export async function getServerSideProps(context) {
       })
     : "images";
   return {
-    props: { convertedImages }, // will be passed to the page component as props
+    props: { convertedImages, }, // will be passed to the page component as props
+    revalidate :60
   };
 }
 
