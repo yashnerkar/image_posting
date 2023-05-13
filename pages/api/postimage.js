@@ -4,8 +4,6 @@ import User from "../../database/models/user";
 import Image from "../../database/models/image";
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
-import image from "../../database/models/image";
-import user from "../../database/models/user";
 export const config = {
   api:{
     bodyParser:false,
@@ -21,10 +19,11 @@ const handler = async (req, res) => {
     }
     const {username,caption,imageFile} = fields;
     console.log(fields)
-    const fileName =  uuidv4();
+    // const fileName =  uuidv4();
     const base64String = imageFile.split(',')[1]; // Remove the data:image/jpeg;base64, part
-    const mimetype = imageFile.split(';')[0].slice(5) // image/jpeg 
+    const mimetype = imageFile.split(';')[0].slice(5) //images/data
     const imageBufferData = Buffer.from(base64String, 'base64');
+    console.log(imageBufferData)
     await fs.promises.writeFile(`public/${fileName}`, imageBufferData)
     const imageDataObj = new Object({
       data : imageBufferData,

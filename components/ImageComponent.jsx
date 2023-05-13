@@ -7,9 +7,8 @@ const ImageComponent = ({
 }) => {
   const [src, setSrc] = useState(null);
   const imageRef = useRef(null);
-  console.log(imageRef.current);
-  console.log(src);
-
+  // console.log(imageRef.current);
+  // console.log(src);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log(file);
@@ -25,7 +24,9 @@ const ImageComponent = ({
     if (imageRef.current && crop.width && crop.height) {
       const croppedImageUrl = getCroppedImgUrl(imageRef.current, crop);
       console.log("Cropped Image URL:", croppedImageUrl);
-      setCroppedSrc(croppedImageUrl);
+      const base64String = croppedImageUrl.split(',')[1]; // Remove the data:image/jpeg;base64, part
+    const imageBufferData = Buffer.from(base64String, 'base64');
+      setCroppedSrc(imageBufferData);
     }
   };
 
@@ -50,8 +51,8 @@ const ImageComponent = ({
       crop.width,
       crop.height
     );
-
-    return canvas.toDataURL("image/jpeg");
+    const format = image.src.split('.').pop(); // Get the format from the image source URL
+    return canvas.toDataURL(`image/${format}`);
   };
   return (
     <div
